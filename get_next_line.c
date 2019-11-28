@@ -12,83 +12,69 @@
 
 #include "get_next_line.h"
 
-void	*ft_calloc(size_t count, size_t size)
+int	new_line(char **s, char **line)
 {
-	void	*str;
-	int		i;
+	char	*tmp;
+	int	i;
 
 	i = 0;
-	str = malloc(count * size);
-	if (str == NULL)
-		return (NULL);
-	while (i < count * size)
-	{
-		((char*)str)[i] = 0;
+	tmp = ft_strdup(*s);
+	ft_strfree(s);
+	while (tmp[i] != '\n' && tmp[i] != '\0')
 		i++;
-	}
-	return (str);
-}
-
-void	ft_strfree(char *s)
-{
-	if (s)
+	if (tmp[i] == '\n')
 	{
-		free((char*)s);
-		*s = '\0';
+		tmp[i] = '\0';
+		*line = ft_strdup(tmp);
+		*s = ft_strdup(&tmp[i + 1]);
+		free(tmp);
 	}
-	return ;
-}
-
-int		ft_line(char **s, char **line, int fd, int ret)
-{
-	int		len;
-	char	*tmp;
-
-	len = 0;
-	while (s[fd][len] != '\n' || s[fd][len] != '\0')
-		len++;
-	if (s[fd][len] == '\n')
+	else
 	{
-		*line = ft_substr(s[fd], 0, len);
-		tmp = ft_strdup(s[fd]);
-		ft_strfree(s[fd]);
-		s[fd] = tmp;
-		if (s[fd][0] == '\0')
-			ft_strfree(s[fd]);
-	}
-	else if (s[fd][len] == '\0')
-	{
-		if (ret == BUFF_SIZE)
-			return (get_next_line(fd, line));
-		*line = ft_strdup(s[fd]);
-		ft_strfree(s[fd]);
+		*line = ft_strdup(tmp);
+		free(tmp);
 	}
 	return (1);
 }
 
-int		get_next_line(int fd,char **line)
+int	ft_read_line(int fd, char *buf)
 {
-	static char		*s[4096];
-	char			*buf[BUFF_SIZE + 1];
-	char			*tmp;
-	int				ret;
+	int count;
 
-	if (fd < 0 || !line || BUFF_SIZE < 1)
-		return (-1);
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[ret] = NULL;
-		if (s[fd] == NULL)
-			s[fd] = ft_calloc(1, 1);
-		tmp = ft_strjoin(s[fd], *buf);
-		free(s[fd]);
-		s[fd] = tmp;
-		if (ft_strchr(*buf, '\n'))
-			break;
-	}
-	if (ret < -1)
-		return (-1);
-	if (ret == 0 && (s[fd] == NULL || s[fd][0] == '\0'))
+	count = read(fd, buf, BUFF_SIZE);
+	if (count > 0)
+		return (count);
+	if (count == 0)
 		return (0);
-	return (ft_line(s, line, fd, ret));
+	if (count < 0)
+		return (-1);
+}
+
+int	get_next_line(int fd, char **line)
+{
+	static char	*s[4096];
+	char		buf[BUFF_SIZE + 1];
+	char		*tmp;
+	int		count;
+	
+	if (line && fd >= 0 && BUFF_SIZE > 0 && read(fd, buf, 0) > -1)
+	{
+		if (s[fd] == NULL)
+			s[fd] = (char*)ft_calloc(1, 1);
+		while (!ft_strchr(s[fd], '\n'))
+		{
+			count = ft_read_line(fd, buf);
+			if (count == 0)
+				break;
+			buf[count] = '\0';
+			tmp = ft_strjoin(s[fd], buf);
+			free(s[fd]);
+			s[fd] = ft_strdup(tmp);
+			free(tmp);
+		}
+		if (count == 0 && s[fd][0] == '\0')
+			return (0);
+		return (new_line(&s[fd], line));
+	}
+	return (-1);
 }

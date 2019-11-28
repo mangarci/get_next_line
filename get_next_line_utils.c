@@ -48,39 +48,29 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (dst);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	unsigned char	*str;
-	size_t			i;
-
-	str = (unsigned char*)s;
-	i = 0;
-	if (str[i] == '\0')
-		return (0);
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t count, size_t size)
 {
 	size_t	i;
-	char	*str;
+	void	*str;
 
 	i = 0;
-	if (!(str = malloc(sizeof(char) * (len + 1))) || !s)
-		return (NULL);
-	if (start < ft_strlen(s))
+	if(!(str = malloc(count * size)))
+		return (str);
+	while (str[i])
 	{
-		while (s[start] && i < len)
-		{
-			str[i] = s[start];
-			start++;
-			i++;
-		}
+		((char*)str[i] = 0;
+		i++;
 	}
-	str[i] = '\0';
 	return (str);
+}
+
+void	ft_strfree(char *s)
+{
+	if (s)
+	{
+		free(*s);
+		*s = NULL;
+	}
 }
 
 char	*ft_strchr(const char *s, int c)
