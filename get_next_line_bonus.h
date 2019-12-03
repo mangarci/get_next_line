@@ -6,12 +6,12 @@
 /*   By: mangarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:36:02 by mangarci          #+#    #+#             */
-/*   Updated: 2019/12/03 15:55:51 by mangarci         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:45:51 by mangarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # ifndef BUFF_SIZE
 #  define BUFF_SIZE 32
 # endif
