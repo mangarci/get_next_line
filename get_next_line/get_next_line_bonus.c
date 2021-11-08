@@ -6,7 +6,7 @@
 /*   By: mangarci <mangarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 13:58:19 by mangarci          #+#    #+#             */
-/*   Updated: 2021/11/08 17:42:08 by mangarci         ###   ########.fr       */
+/*   Updated: 2021/11/08 17:51:40 by mangarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	get_next_line(int fd, char **line)
 		}
 		if (ft_strchr_gnl(s[fd], '\n'))
 			break ;
+		len = read(fd, buff, BUFF_SIZE);
 	}
 	if ((len < 0) || (len == 0 && s[fd] == '\0'))
 		return (ft_return(len, line));
